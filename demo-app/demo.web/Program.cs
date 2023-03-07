@@ -1,6 +1,6 @@
+using demo.data;
 using demo.web.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +9,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
+builder.Services.AddDbContextFactory<ApplicationDbContext>(
+    opt =>
+        opt.UseSqlServer(builder.Configuration.GetConnectionString("Charlotte"), b => b.MigrationsAssembly("demo.web")));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
